@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 
 
-type PropsType = 
-{
 
-}
 export function fstLoadData({query, pageIndex}) {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string>("")
