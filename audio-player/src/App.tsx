@@ -82,20 +82,21 @@ function App() {
       }px`;
     }
 
-    if (progressBar.currentTime == progressBar.duration) dispatch(nextSong());
-  }, [progressBar, dispatch]);
+    if (progressBar.currentTime === progressBar.duration) dispatch(nextSong());
+  }, [progressBar.currentTime,progressBar.duration, dispatch]);
 
-  function changeProgressOnClick() {
+  function changeProgressOnClick(e:MouseEvent<HTMLDivElement>) {
     const progressbar = document.getElementById("progressbar");
-    const progressPlayed = document.getElementById("progressbar-played");
-    const XProgressBar = progressbar?.getBoundingClientRect()
-    console.log(XProgressBar)
-    if (progressPlayed && XProgressBar) {
-      progressPlayed.style.width = `${
-        (progressBar.currentTime / progressBar.duration) * XProgressBar.left
-      }px`;
-    }
+    const widthProgressBar = progressbar?.getBoundingClientRect().width;
+    const newTime = ((e.clientX - progressbar.getBoundingClientRect().left) / widthProgressBar)  * progressBar.duration
+
+    audioRef.current.currentTime = newTime;
+    dispatch(setCurrentTime(newTime));
+
+    if (progressBar.currentTime === progressBar.duration) dispatch(nextSong());
+
   }
+
 
   function getFormattedTimes(value: number) {
     const minutes: number = Math.floor(value / 60);
@@ -123,10 +124,7 @@ function App() {
               changePlay={() => dispatch(PausePlay())}
             />
             <NextButton
-              nextAudio={() => {
-                console.log("next audio");
-                dispatch(nextSong());
-              }}
+              nextAudio={() =>dispatch(nextSong())}
             />
           </div>
 
